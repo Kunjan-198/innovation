@@ -1,0 +1,39 @@
+<launch>
+  <include
+  file="$(find gazebo_ros)/launch/empty_world.launch" />
+  <rosparam file="$(find farm_bot)/config/gazebofb.yaml" command="load"/>
+
+  <param 
+  name="robot_description" 
+  textfile="$(find farm_bot)/urdf/farm_bot_urdf.urdf" />
+  <node
+  name="tf_footprint_base"
+  pkg="tf"
+  type="static_transform_publisher"
+  args="0 0 0 0 0 0 base_link base_footprint 40" />
+  <node
+  name="spawn_model"
+  pkg="gazebo_ros"
+  type="spawn_model"
+  args="-file $(find farm_bot)/urdf/farm_bot_urdf.urdf -urdf -model farm_bot_urdf -x0 -y0 -z0.6 -R3.14 -P0 -Y0"
+  output="screen" />
+  <node
+  name="fake_joint_calibration"
+  pkg="rostopic"
+  type="rostopic"
+  args="pub /calibrated std_msgs/Bool true" />
+<!-- converts joint states to TF transforms -->
+  <node name="robot_state_publisher" 
+  pkg="robot_state_publisher" 
+  type="robot_state_publisher" respawn="false" output="screen">
+<remap from="/joint_states" to="/simple_model/joint_states" />
+  </node>
+  
+    <!-- load the controllers -->
+ <!--Made a node for launch of sub.py as bruno-->
+  
+  <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false"
+    output="screen" ns="/simple_model" args="joint1_position_controller joint2_position_controller joint3_position_controller joint4_position_controller joint_state_controller"/>
+
+
+</launch>

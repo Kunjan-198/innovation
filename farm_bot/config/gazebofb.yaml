@@ -1,0 +1,20 @@
+simple_model:
+  # Publish all joint states -----------------------------------
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50  
+
+  # Position Controllers ---------------------------------------
+  joint1_position_controller:
+    type: effort_controllers/JointEffortController
+    joint: wheel_right_front
+  joint2_position_controller:
+    type: effort_controllers/JointEffortController
+    joint: wheel_right_rear
+  joint3_position_controller:
+    type: effort_controllers/JointEffortController
+    joint: wheel_left_front
+  joint4_position_controller:
+    type: effort_controllers/JointEffortController
+    joint: wheel_left_rear
+    
